@@ -1,0 +1,8 @@
+date (UTC): 2026-11-14T15:09:29Z
+Linux 6.18.44-fc-v470 x86_64
+Python 3.13.18
+numpy 2.5.3 | scipy 1.18.1
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Max 9: not available
+Ableton Live 12: not available
+engine sha256 daa947e8ccf6c1f970ff6ad34cc2f8ed2e1212f2d80c1cc37b763a4cecaef1d8

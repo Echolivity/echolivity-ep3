@@ -1,5 +1,12 @@
 # Changelog — Echolivity EP-3
 
+## v0.1.2-dev (2026-11-14) — host-readiness and dub review
+- Engine: renamed identifiers that collide with gen~ built-ins (`dcblock` → `dc_block`, `lt` → `l_t`). No functional change: bit-identical (X01, R06). A scan of 431 identifiers finds no other collisions.
+- Host validation kit: `tests/golden/EP3_host_harness.maxpat` (9 gen~, same code as the device), 5 sample-exact references, 4 behaviour checks, `compare.py`, `check_behaviour.py`, generator `build/build_harness_ep3.py`; guide `remediation/EP3_HOST_SESSION_GUIDE.md`.
+- Dub scenarios: `tests/dub_scenarios.py` → `listening/*.wav` and `tests/DUB_SCENARIO_REPORT.md`; team review `remediation/EP3_TEAM_REVIEW_v0.1.2-dev.md`.
+- Test plan: harness steps (G01–G04), L17 long session, M01–M08 musical checks.
+- Tests: behaviour 19/19, remediation 14/14, UI 5/5, arithmetic 7/7. Max 9 / Live 12: not run.
+
 ## v0.1.1-dev (2026-11-14) — practical-validation remediation
 Baseline: v0.1.0-dev, engine SHA-256 2a46b3b2…a50b, kept read-only for comparison. Details: `remediation/EP3_REMEDIATION_REPORT.md`.
 - F1 HOLD: the hold loop gain is divided by the loop's computed peak gain, and a ±3 % per-pass level trim (active only during HOLD) settles, then locks the held level. HOLD no longer grows (+13 dB/min before); Hold Feedback keeps its meaning.

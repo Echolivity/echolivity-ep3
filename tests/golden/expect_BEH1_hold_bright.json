@@ -1,0 +1,12 @@
+{
+ "levels_db_re_pre_hold": {
+  "1": -2.6,
+  "5": -3.1,
+  "9": -3.1,
+  "19": -3.2,
+  "30": -3.1
+ },
+ "max_db": -2.6,
+ "spread_after_settle_db": 0.1,
+ "pass": true
+}
