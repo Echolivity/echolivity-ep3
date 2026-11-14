@@ -60,7 +60,10 @@ Source numbers [S#] refer to `docs/SOURCES.md`.
 | Bypass cap by serial | Fitted in early units, absent in later ones per one builder; added by the factory addendum. Varies by serial. | CONFLICT (by serial) | [S1], [S8] |
 | Drain bias | 14.4 V on the schematic (ideal would be ~11 V), so the original bias was "not perfect" | SOURCED | [S8] (ClinchFX) |
 | Dry treble | "Top end is down by about 4-5dB at 7KHz" in the first schematic version | SOURCED | [S8] (ClinchFX) |
-| Output impedance | High; it shapes the tone with the next stage. EP-4's low-impedance buffer is said to lose the "EP-3" sound. | SOURCED | [S8] |
+| Output mixer (dry tone) | Passive network after the FET: 0.1 µF → 470k to ground → 220k → Echo Volume lug → 100k → OUT; echo via 220k / 100k → other lug → 100k → OUT; **the 500k pot's wiper is grounded**, so Echo Volume is a blend and dry level peaks near 0.2 then falls (E06). Thevenin resistance at OUT 68–84k (EchoPre3 reports 59–102k; ClinchFX "region of 200K" for his EP-PRE network) | [S13][S14][S15]; values from replica/forum traces, not a clean EP-3 schematic |
+| Cable load | Default **470 pF**: fits ClinchFX's published descriptions of both versions with one value (E07: early +1.9 dB @ 4 kHz, +0.8 @ 7k, −2.1 @ 12k; late −2.8 @ 4k, −5.9 @ 7k) | Fitted to [S16] |
+| Input RF filter | 100k series, 100 pF to ground (15.9 kHz) | [S15] (EP-3 has 100 pF; replicas 220 pF) |
+| Echo level | Echo source scaled so the first repeat ≈ dry level at Echo Volume 0.5; plus Echo Trim | APPROX |
 | Head amp | Q1, Q2 (TIS98); "Overall gain is approximately 60dB at 1kHz" | VERIFIED | [S1] |
 | Playback de-emphasis | 18k with **0.033 µF** (manual scan, 268 Hz) or **0.003 µF** (repair forum, 2.95 kHz) | **CONFLICT** | [S1], [S6] |
 | Record driver | Q6, Q7 2N3053; T1 "B346-012 CUSTOM COIL" | VERIFIED | [S1] |
@@ -79,10 +82,29 @@ ECHO DELAY (slider), ECHO SUSTAIN (repeats), ECHO VOLUME (echo level / mix), ECH
 3. **Loop length**, for SOS timing and for how long the old material survives with Sustain at zero.
 4. **Serial range to target:** proposed **12961–28591**, the longest-produced two-board version, with the 22 nF source bypass as a switch (early vs later units).
 
-## 6. Proposed device (for your approval; not built)
+## 6. What v0.1.0-dev implements (and what is approximate)
 
-- **Engine:** reuse the H&H tape buffer, with a moving band-limited write head and a fixed read; bias leakage as an option on fast head moves.
-- **Front end:** FET preamp stage (always in circuit, as on the original), with pre-emphasis on the record path.
-- **Controls:** Echo Delay slider (HW range), Echo Sustain, Echo Volume, Echo/SOS, Record Level, and an echo-on footswitch (momentary + latch).
-- **Shared Echolivity features:** SYNC/TAP/MANUAL with STR/DOT/TRI, HOLD/DRIVE/STOP, output protection, everything mappable, two themes.
-- **Mono throughout**, with the H&H device's optional dual mode.
+Engine: `dsp/ep3_core.genexpr`. Tests: `tests/EP3_TEST_REPORT.md` (15/15, run on the GenExpr source outside Max).
+
+| Part | How it's modelled | Basis |
+|---|---|---|
+| Moving record/erase head, fixed echo head | Write position = tape + head distance. Every tape cell the head crosses is written, so a slider move changes pitch one delay later, by 1/u (E02) | [S1], [S2] |
+| Write anti-aliasing | 4th-order low-pass at 0.35 × sr × head speed over tape (E03: −44.5 dB) | [S2] (variable cutoff), our order and cutoff |
+| Tape buffer | 48 000 cells per second of tape, so memory doesn't depend on sample rate (21.6 MB for 112.5 s) | Design |
+| Loop | 112.5 s default (~75 ft at 8 ips, "about two minutes"); adjustable 1–112.5 s | in2guitar; [S1] "two minute" |
+| Sound-on-sound | SOS head monitors the loop; erase off; old layer × −1 dB per pass (E04); Sustain inactive | [S1] |
+| PLAYBACK footswitch | Record and erase off; the loop replays unchanged (E08) | [S1] |
+| ECHO footswitch | Mutes the echo return (smooth 2-stage fade, E13). Whether the original also stops recording is **UNKNOWN** | APPROX |
+| Q5 FET stage | Square-law JFET with an implicit source-node solve; 22k / 3.3k / 0.022 µF; 21.2 V supply. Idss 3.4 mA and Vp −3 V are **fitted** to the measured 1.8 V source voltage. Gain 14.0 dB at LF (manual's 16.5 dB is the ideal 22k/3.3k), +9 dB pre-emphasis shelf (E06) | [S1], [S8]; FET constants APPROX |
+| Output impedance | 100 kΩ into a Cable Load (default 250 pF, E07) | Catalinbread replica spec (Dunlop says 55 kΩ). APPROX |
+| De-emphasis | Switch: 18k/3 nF (2.95 kHz, default) or 18k/33 nF (268 Hz, literal manual scan). Default chosen because 54 µs pairs with the 2.2 kHz pre-emphasis (≈ NAB 50 µs). | CONFLICT kept as a switch |
+| Tape HF loss | 2-pole at 5188 Hz × speed (H&H fit scaled 8/12) | APPROX |
+| Saturation | tanh, calibrated so nominal input gives ~3 % THD on the echo (E05: 2.1 %) | Manual's record-level procedure; curve APPROX |
+| Flutter | 26 Hz capstan, 2.5 / 5 Hz pinch wheel, broadband + drift; Flutter 0.5 ≈ 0.3 % spec (E10: 0.256 %) | [S1], [S5]; mix APPROX |
+| Bias leak | Bias written into the tape only when the head's speed over the tape puts it below the tape's Nyquist (u > ~4.7). Audible only on hard flicks (E11). Level APPROX | [S2] |
+| Echo Sustain | 0–1 → loop gain 0–1.25; runs away above ~0.8, bounded by saturation and output protection (E09) | [S1] behaviour; scale APPROX |
+| Head-amp coupling | 30 Hz HP; record coupling 20 Hz HP | APPROX (schematic values unreadable) |
+| SOS head position | 62.5 ms beyond the slider's far end | APPROX |
+| Polarity | Device is non-inverting; dry and echo in phase | APPROX (original's polarity unknown) |
+
+Still open: a clean schematic (de-emphasis, coupling caps, record EQ, the exact output mixer, the 470 pF on the echo feed which is not modelled), or a measured IR of a real unit to fit the dry path to; the erase-head question (fixed in the DAFX description); what the ECHO footswitch switches.

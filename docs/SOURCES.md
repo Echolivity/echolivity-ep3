@@ -14,5 +14,11 @@
 | S10 | Wikipedia, "Echoplex". https://en.wikipedia.org/wiki/Echoplex | Dates 1970–1991; CA3080 compressor board | Secondary |
 | S11 | DIYstompboxes, "Echoplex EP-3 22VDC Preamp Schematic". https://www.diystompboxes.com/smfforum/index.php?topic=104772.0 | 22k/3.3k, 0.1 µF out, 470k to ground, 220k to level | Builder's reproduction |
 | S12 | Metropoulos forum, "Echoplex ep3. Anyone knows it well?". http://forum.metropoulos.net/viewtopic.php?t=32894&start=15 | Echo Sustain pot 500k linear | Forum |
+| S13 | DIYstompboxes, "Echoplex EP-3 22VDC Preamp Schematic" (Marlowe). https://www.diystompboxes.com/smfforum/index.php?topic=104772.0 | 470K from the 0.1 µF / 220K junction to ground; tape output tied to the 100K / pot junction; the pot was originally the blend | Builder's trace |
+| S14 | Guitar FX Layouts, "A Pair o' Preamps" (quoting ClinchFX). https://tagboardeffects.blogspot.com/2014/05/a-pair-o-preamps-echoplex-and-tillman.html | Output Z "in the region of 200K"; pot wiper grounded; 220K to pot lug 1, 100K to output | Replica maker via blog |
+| S15 | Metropoulos forum, "Echoplex pre-amp" p.2. http://forum.metropoulos.net/viewtopic.php?t=29331&start=15 | Two 100k from the pot lugs to the output; C1 100 pF on the EP-3 | Owner comparing to his unit |
+| S16 | The Gear Page, "Echoplex vs Space Echo preamp" (ClinchFX). https://www.thegearpage.net/board/index.php?threads/echoplex-vs-space-echo-preamp.2136491/ | Early: gentle rise 1→4 kHz, gentle fall to 7 kHz, then rapid. Later (one cap removed): gentle roll-off from ~600 Hz, a long way down at 7 kHz | Replica maker's analysis; used as the fit target |
+| S17 | el34world, "Echoplex EP-3 — No Output". https://el34world.com/Forum/index.php?topic=28197.0 | Echo feed: 220K with a 470pF / 100K filter before mixing | Repair forum |
+| — | EchoPre3 (AGPL-3.0). https://github.com/tehguitarist/EchoPre3 | Comparison only (output Z 59–102k, non-monotonic volume); no code or data used | Measured plugin of a replica-based circuit |
 
 Garbled schematic scans (not relied on): music-electronics-forum fetch ids 870659 and 912886 (EP-3 serials 9451–12960 and 12961–28591).
