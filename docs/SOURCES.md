@@ -1,0 +1,18 @@
+# Sources (EP-3 research, 2026-11-14)
+
+| # | Source | What it supports | Reliability |
+|---|---|---|---|
+| S1 | Maestro, *Echoplex Owner/Service Manual* (EP-3, EP-4, Sireko ES-1, with addendum). Full text: https://archive.org/stream/maestro_ECHOPLEX_OWNER-SERVICE_MANUAL/ECHOPLEX_OWNER-SERVICE_MANUAL_djvu.txt | Head layout, SOS, controls, bias ~100 kHz, 22 V zener, Q5 gain 16.5 dB, pre-emphasis 2.2 kHz, head amp 60 dB, de-emphasis (OCR), transistor types, W&F < 0.3 %, cartridge wording | Primary. Read as OCR text, so some numbers are garbled; a clean scan is still needed |
+| S2 | Arnardottir, Abel, Smith, "A Digital Model of the Echoplex Tape Delay", AES 125th Convention, paper 7649 (2008). https://aes.org/publications/elibrary/elibrary-page/?id=14800 | ~8 ips; moving write pointer; anti-alias filter on write; capstan/pinch-wheel flutter; bias shifting into the audio band | Peer-reviewed. Only the abstract was read (paper is paywalled) |
+| S3 | Zölzer (ed.), *DAFX* 2nd ed., §12.5 Tape-based Echo Simulation. https://www.oreilly.com/library/view/dafx-digital-audio/9780470665992/c12_level1_5.xhtml | Nominal 8 ips, about 60–600 ms; describes fixed playback and erase heads (conflicts with S1 for the EP-3) | Textbook by the same CCRMA authors; their figure shows an EP-4 |
+| S4 | Guitar World, "Why the Maestro Echoplex EP-3 remains one of the most iconic guitar effects of all time". https://www.guitarworld.com/features/maestro-echoplex-ep3 | 80–800 ms, varies by unit; controls | Journalism |
+| S5 | J. Kaloinen, *Neural Modeling of the Audio Tape Echo Effect*, Aalto University thesis. https://aaltodoc.aalto.fi/server/api/core/bitstreams/cb5e13ca-e071-4d79-96d1-27004e8df205/content | Capstan 26 Hz, pinch wheel 2.5/5.0 Hz (Echoplex) | Thesis summarising S2's measurements |
+| S6 | el34world forum, "Any Echoplex Experts?" (HotBluePlates). https://el34world.com/Forum/index.php?topic=21837.0 | Bias ~71 kHz measured; 0.003 µF / 18k in playback; repeats compressed | Repair tech's notes |
+| S7 | freestompboxes, "Maestro EP3 T70-T2 Bias Oscillator Question". https://www.freestompboxes.org/viewtopic.php?t=30323 | Bias "around 40 or 50kHz" (expected); Nortronics T70-T2 oscillator transformer in some units | Forum |
+| S8 | ClinchFX (EP-PRE designer) posts: strat-talk https://strat-talk.com/threads/tilman-jfet-pre-ep-modification.238940/, thegearpage https://www.thegearpage.net/board/index.php?threads/maestro-ep-3-preamp-circuit-pic.1977918/; Metropoulos forum https://forum.metropoulos.net/viewtopic.php?p=286996 , http://forum.metropoulos.net/viewtopic.php?t=37435&start=15 and http://forum.metropoulos.net/viewtopic.php?start=45&t=37119 | 22 V supply, ~18 V after a 1 k drop, 1 M gate resistor,, 14.4 V drain, −4 to −5 dB at 7 kHz, 22 nF source bypass, output impedance; measured 21.0–21.3 V | Specialist replica maker plus owners' measurements |
+| S9 | gearnews, Audiority PlexiTape. https://www.gearnews.com/audiority-plexitape-brings-the-echoplex-ep-3-tape-delay-to-your-daw/ | Original was mono | Secondary |
+| S10 | Wikipedia, "Echoplex". https://en.wikipedia.org/wiki/Echoplex | Dates 1970–1991; CA3080 compressor board | Secondary |
+| S11 | DIYstompboxes, "Echoplex EP-3 22VDC Preamp Schematic". https://www.diystompboxes.com/smfforum/index.php?topic=104772.0 | 22k/3.3k, 0.1 µF out, 470k to ground, 220k to level | Builder's reproduction |
+| S12 | Metropoulos forum, "Echoplex ep3. Anyone knows it well?". http://forum.metropoulos.net/viewtopic.php?t=32894&start=15 | Echo Sustain pot 500k linear | Forum |
+
+Garbled schematic scans (not relied on): music-electronics-forum fetch ids 870659 and 912886 (EP-3 serials 9451–12960 and 12961–28591).

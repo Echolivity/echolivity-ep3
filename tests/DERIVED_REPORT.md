@@ -1,0 +1,11 @@
+# EP-3 derived values — arithmetic checks
+
+Python only. These check calculations from sourced values; nothing here is a DSP or Max test.
+
+| ID | Check | Result | Detail |
+|---|---|---|---|
+| D01 | Manual's stated pre-emphasis corner (2.2 kHz) matches 3.3k with 0.022 uF, not 0.22 uF | PASS | 0.022 uF → 2192 Hz; 0.22 uF → 219 Hz |
+| D02 | Manual's input gain figures agree (6.7x = 16.5 dB) | PASS | 6.7x = 16.52 dB |
+| D03 | De-emphasis corner for both candidate capacitors (conflict recorded, not resolved) | PASS | 0.033 uF → 268 Hz; 0.003 uF → 2947 Hz |
+| D04 | Head travel for 60–600 ms at 8 ips fits a hand-sized slider | PASS | 12.2–121.9 mm (80–800 ms: 16.3–162.6 mm) |
+| D05 | 26 Hz capstan at 8 ips implies a plausible motor-shaft capstan | PASS | diameter 2.49 mm |
