@@ -160,7 +160,7 @@ box("panel", [1300, 560, 40, 20], pres=[0, 0, DEVW, 169], nin=1, nout=0, bgcolor
     rounded=0, background=1)
 comment("ECHOLIVITY", [8, -1, 110, 16], [1300, 520, 100, 18], size=10.5, fontface=1, textcolor=C["word"], background=1)
 comment("EP-3  TAPE ECHO", [96, -1, 130, 16], [1300, 540, 100, 18], size=9.0, fontface=1, textcolor=C["amber"], background=1)
-comment("8 ips · moving record head · sound-on-sound · mono · v0.1.2-dev", [210, 0, 300, 15], [1420, 540, 160, 18], size=8.0,
+comment("8 ips · moving record head · sound-on-sound · mono · v0.1.3-dev" + (" · RETURN" if VARIANT == "return" else ""), [210, 0, 300, 15], [1420, 540, 160, 18], size=8.0,
         textcolor=C["dim"], background=1)
 
 PL = {"in": (4, 58), "delay": (66, 330), "perf": (400, 120), "plex": (524, 200), "tape": (728, 170),
@@ -319,7 +319,7 @@ numbox("start_time", "Start Time", "StartT", 0.05, 8, 0.4, [X + 82, 141], size=(
 # ===== ECHO (the original's front-panel controls) ==============================
 X = PL["plex"][0]
 dial("sustain", "Echo Sustain", "Sustain", 0, 1, 0.4, [X + 6, 26], size=(64, 70), accent=C["red"])
-dial("echo", "Echo Volume", "EchoVol", 0, 1, 0.5, [X + 74, 26], accent=C["amber"])
+dial("echo", "Echo Volume", "EchoVol", 0, 1, 1.0 if VARIANT == "return" else 0.5, [X + 74, 26], accent=C["amber"])
 dial("rec_db", "Record Level", "RecLvl", -12, 12, 0, [X + 122, 26], unit=4, accent=C["cream"])
 label("Echo Volume = blend", [X + 74, 80, 120, 12], size=7.0)
 tab("sos", "Echo / Sound on Sound", "Mode SOS", ["ECHO", "S-O-S"], 0, [X + 6, 104], [90, 20], fontsize=9.0)

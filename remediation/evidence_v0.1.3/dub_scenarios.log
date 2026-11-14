@@ -1,0 +1,60 @@
+## d1_throw
+D1.repeat_peaks_dbfs = [-21.0, -23.0, -25.1, -27.5, -29.5, -31.8, -34.3, -37.2]
+D1.repeats_within_30dB = 11
+D1.decay_db_per_repeat = -2.14
+D1.return_peak_vs_dry_peak_db = -18.0
+## d2_ride
+D2.dot8.oscillation_plateau_dbfs_rms = -24.0
+D2.dot8.plateau_spread_db = 10.6
+D2.dot8.seconds_to_plateau_after_ride = 0.8
+D2.dot8.seconds_to_minus30dB_after_pulling_to_0.45 = 3.95
+D2.dot8.peak = 0.207
+D2.slap114ms.oscillation_plateau_dbfs_rms = -18.2
+D2.slap114ms.plateau_spread_db = 0.4
+D2.slap114ms.seconds_to_plateau_after_ride = 0.9
+D2.slap114ms.seconds_to_minus30dB_after_pulling_to_0.45 = 0.65
+D2.slap114ms.peak = 0.22
+## d3_siren
+D3.peak = 0.197
+D3.u_range = [0.75, 1.31]
+D3.hf_above_8k_peak_re_signal_db = -61.9
+## d4_filter
+D4.by_resonance = {0.0: {'peak': 0.168, 'rms_8_12s_dbfs': -32.1, 'nan': False}, 0.6: {'peak': 0.229, 'rms_8_12s_dbfs': -21.3, 'nan': False}, 1.0: {'peak': 0.225, 'rms_8_12s_dbfs': -21.0, 'nan': False}}
+## d5_hold
+D5.BRIGHT.held_bar_levels_dbfs = [-34.3, -37.2, -38.9, -39.1]
+D5.BRIGHT.level_one_bar_after_release_dbfs = -53.8
+D5.BRIGHT.held_vs_sent_level_db = -7.8
+D5.DARK.held_bar_levels_dbfs = [-23.1, -25.6, -28.2, -29.5]
+D5.DARK.level_one_bar_after_release_dbfs = -46.4
+D5.DARK.held_vs_sent_level_db = -7.6
+## d5b_hold_resonance
+D5b.levels_dbfs_at_2_5_10_20_28s = [-25.3, -19.8, -18.8, -18.6, -18.6]
+D5b.peak = 0.239
+## d6_stop
+D6.peak = 0.703
+D6.hf_burst_at_stop_db_re_music_rms = -65.9
+D6.hf_burst_at_restart_db_re_music_rms = -65.5
+D6.hf_burst_same_moments_without_stop_db = [-65.9, -65.5]
+D6.level_before_stop_dbfs = -21.5
+D6.level_last_second_of_stop_dbfs = -20.3
+D6.level_1s_after_restart_vs_no_stop_db = -4.0
+D6.level_3s_after_restart_vs_no_stop_db = -3.2
+## d7_drive
+D7.first_repeats_level_gain_db = 13.1
+D7.spectral_centroid_hz_plain_vs_drive = [2697, 2690]
+D7.peak = 0.266
+## d8_sos
+D8.peak = 0.352
+## d9_tone
+D9.BRIGHT.sustain0.55.repeat1_3_6_peak_dbfs = [-17.4, -24.4, -33.3]
+D9.BRIGHT.sustain0.7.repeat1_3_6_peak_dbfs = [-17.4, -20.6, -23.6]
+D9.DARK.sustain0.55.repeat1_3_6_peak_dbfs = [-12.6, -23.9, -38.4]
+D9.DARK.sustain0.7.repeat1_3_6_peak_dbfs = [-12.6, -19.8, -28.0]
+## d10_delay_move
+D10.peak = 0.714
+D10.hf_burst_excess_hand_move_db = 0.1
+D10.hf_burst_excess_throw_db = 4.4
+D10.hf_burst_hand_move_db_re_music_rms = -25.9
+D10.level_change_during_moves_db = [-0.0, 0.8]
+NaN events: []
+EXIT 0

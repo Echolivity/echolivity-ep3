@@ -1,5 +1,14 @@
 # Changelog — Echolivity EP-3
 
+## v0.1.3-dev (2026-11-14) — dub workflow, reproducible regression, HOLD assessment
+- Controller bank "Dub" (first eight): Echo Sustain, Echo Volume, Echo Delay, Repeat LP, Repeat HP, HOLD Latch, DRIVE Latch, STOP Latch; also first in parameter and box order. No parameter renamed. Live/Push use: UNVERIFIED.
+- New Return variant `devices/Echolivity_EP3_v0.1.3-dev_Return.amxd` (Echo Volume default 1, fully wet). Insert device and its defaults unchanged.
+- Frozen v0.1.0-dev baseline shipped in `baseline/` with a SHA-256 check; the regression suite runs from the archive alone.
+- New `tests/test_workflow.py` (W01–W07); HOLD study, 30-min stability / CPU proxy, dub D6 click metrics and D10 delay change.
+- Evidence: the obsolete first D2 log is labelled SUPERSEDED; single fresh run in `remediation/evidence_v0.1.3/`.
+- DSP engine unchanged (byte-identical to v0.1.2-dev). HOLD assessed, deliberately not changed; DARK + HOLD limitation documented (K-03).
+- Tests from the extracted archive: 7/7, 19/19, 5/5, 8/8, 14/14; host references 9/9 identical. Max 9 / Live 12: BLOCKED. Reports in `reports_v0.1.3/`.
+
 ## v0.1.2-dev (2026-11-14) — host-readiness and dub review
 - Engine: renamed identifiers that collide with gen~ built-ins (`dcblock` → `dc_block`, `lt` → `l_t`). No functional change: bit-identical (X01, R06). A scan of 431 identifiers finds no other collisions.
 - Host validation kit: `tests/golden/EP3_host_harness.maxpat` (9 gen~, same code as the device), 5 sample-exact references, 4 behaviour checks, `compare.py`, `check_behaviour.py`, generator `build/build_harness_ep3.py`; guide `remediation/EP3_HOST_SESSION_GUIDE.md`.

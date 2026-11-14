@@ -2,7 +2,7 @@
 EP-3 v0.1.1-dev remediation regression suite (findings F1–F8).
 
 Every test runs on the FIXED engine (dsp/ep3_core.genexpr) and, for comparison, on the frozen
-BASELINE v0.1.0-dev engine (../echolivity_ep3_v0.1.0-dev_baseline, read-only). Only the fixed
+BASELINE v0.1.0-dev engine (baseline/v0.1.0-dev/ep3_core.genexpr, shipped, sha256-checked). Only the fixed
 build must pass; baseline results are reported as "before".
 
 Environment: GenExpr source executed as C (tests/genexpr_sim). NOT Max 9 / Live 12.
@@ -18,7 +18,22 @@ sys.path.insert(0, os.path.join(HERE, "genexpr_sim"))
 import ep3sim  # noqa: E402
 
 NEW = os.path.join(ROOT, "dsp", "ep3_core.genexpr")
-BASE = os.environ.get("EP3_BASELINE", os.path.join(ROOT, "..", "echolivity_ep3_v0.1.0-dev_baseline", "dsp", "ep3_core.genexpr"))
+# Frozen v0.1.0-dev engine shipped inside the package (baseline/v0.1.0-dev). Its hash is checked so a
+# modified or missing baseline stops the suite instead of producing a silent "before" column.
+BASE = os.environ.get("EP3_BASELINE", os.path.join(ROOT, "baseline", "v0.1.0-dev", "ep3_core.genexpr"))
+BASE_SHA256 = "2a46b3b27ac584f840d972619d70243dedd9b33b63a9e341d3970080f739a50b"
+
+
+def _check_baseline():
+    import hashlib
+    if not os.path.isfile(BASE):
+        sys.exit(f"BLOCKED: frozen baseline not found at {BASE}")
+    h = hashlib.sha256(open(BASE, "rb").read()).hexdigest()
+    if h != BASE_SHA256:
+        sys.exit(f"BLOCKED: baseline sha256 {h} does not match the frozen v0.1.0-dev engine {BASE_SHA256}")
+
+
+_check_baseline()
 RATES = (44100, 48000, 96000)
 RES = []
 RAW = {}
@@ -221,7 +236,7 @@ def r07():
     import re
     src = open(NEW).read()
     dflt = float(re.search(r"Param loop_s\(([\d.]+)", src).group(1))
-    dev = json.load(open(os.path.join(ROOT, "devices", "Echolivity_EP3_v0.1.2-dev.maxpat")))["patcher"]
+    dev = json.load(open(os.path.join(ROOT, "devices", "Echolivity_EP3_v0.1.3-dev.maxpat")))["patcher"]
     ui = [b["box"]["saved_attribute_attributes"]["valueof"] for b in dev["boxes"] if b["box"].get("varname") == "loop_s"][0]
     sr = 48000
     n = int(26 * sr)

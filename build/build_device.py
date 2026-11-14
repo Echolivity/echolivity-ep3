@@ -1,5 +1,8 @@
 """
-Builds the Echolivity EP-3 Max for Live device from dsp/ep3_core.genexpr (v0.1.2-dev).
+Builds the Echolivity EP-3 Max for Live device from dsp/ep3_core.genexpr (v0.1.3-dev).
+
+EP3_VARIANT=return builds the Return-track variant: identical device, except Echo Volume
+defaults to 1 (fully wet: the grounded-wiper blend silences the dry path) and the panel says RETURN.
 
 Outputs
   devices/<name>.maxpat  — editable Max patcher (open in Max 9, or paste
@@ -11,6 +14,8 @@ Outputs
 Run: python3 build/build_device.py
 """
 import json, os, struct
+VARIANT = os.environ.get("EP3_VARIANT", "insert")
+assert VARIANT in ("insert", "return"), VARIANT
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 CODE = open(os.path.join(ROOT, "dsp", "ep3_core.genexpr")).read()
@@ -168,6 +173,20 @@ for b in boxes:
     v = b["box"].get("saved_attribute_attributes", {}).get("valueof")
     if b["box"].get("parameter_enable") and v:
         registry[b["box"]["id"]] = [v["parameter_longname"], v["parameter_shortname"], 0]
+# Controller bank (v0.1.3-dev, Workstream B1). The dub performance set comes first, in this order,
+# both as a named parameter bank (Max "parameterbanks", read by Live for Push / controller banks)
+# and as the first eight entries of the parameter registry and the box list (the order Live falls back
+# to when no bank is defined). Box order only changes instantiation / z-order among foreground
+# controls; panels and labels are background-layer, so nothing is hidden. Host behaviour: UNVERIFIED.
+DUB_BANK = ["Echo Sustain", "Echo Volume", "Echo Delay", "Repeat LP", "Repeat HP",
+            "HOLD Latch", "DRIVE Latch", "STOP Latch"]
+_by_name = {v[0]: k for k, v in registry.items()}
+assert all(n in _by_name for n in DUB_BANK), "dub bank parameter missing"
+_first = [_by_name[n] for n in DUB_BANK]
+registry = {k: registry[k] for k in _first + [k for k in registry if k not in _first]}
+_front = [b for i in _first for b in boxes if b["box"]["id"] == i]
+boxes[:] = _front + [b for b in boxes if b["box"]["id"] not in _first]
+registry["parameterbanks"] = {"0": {"index": 0, "name": "Dub", "parameters": DUB_BANK}}
 registry["inherited_shortname"] = 1
 
 patcher = {
@@ -177,7 +196,7 @@ patcher = {
         "default_fontsize": 10.0, "default_fontface": 0, "default_fontname": "Arial",
         "openrect": [0.0, 0.0, DEVW, 169.0],
         "gridonopen": 1, "gridsize": [8.0, 8.0], "devicewidth": DEVW,
-        "description": "Echolivity EP-3 — tape echo after the Maestro Echoplex EP-3, v0.1.2-dev",
+        "description": "Echolivity EP-3 — tape echo after the Maestro Echoplex EP-3, v0.1.3-dev" + (" (Return: Echo Volume 1, fully wet)" if VARIANT == "return" else ""),
         "parameters": registry,
         "boxes": boxes, "lines": lines, "dependency_cache": [],
         "latency": 0, "is_mpe": 0, "minimum_live_version": "", "minimum_max_version": "",
@@ -192,7 +211,7 @@ patcher = {
 }
 
 os.makedirs(os.path.join(ROOT, "devices"), exist_ok=True)
-OUTNAME = os.environ.get("EP3_DEVICE_NAME", "Echolivity_EP3_v0.1.2-dev")
+OUTNAME = os.environ.get("EP3_DEVICE_NAME", "Echolivity_EP3_v0.1.3-dev" + ("_Return" if VARIANT == "return" else ""))
 js = json.dumps(patcher, indent=1)
 open(os.path.join(ROOT, "devices", OUTNAME + ".maxpat"), "w").write(js)
 

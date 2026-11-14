@@ -243,15 +243,63 @@ def d5b_hold_resonance():
 
 
 # ------------------------------------------------------------------ D6 tape stop at the end of a phrase
+def hf_burst_db(y, t_evt, ref_rms, win=0.03):
+    """largest 10 ms energy above 8 kHz within +-win s of an event, in dB re the music's broadband RMS"""
+    hp = sosfiltfilt(butter(8, 8000, "hp", fs=SR, output="sos"), y)
+    a, b = int((t_evt - win) * SR), int((t_evt + win) * SR)
+    w = int(0.01 * SR)
+    seg = hp[max(a, 0):b]
+    e = max(rms(seg[i:i + w]) for i in range(0, max(len(seg) - w, 1), w // 2))
+    return round(float(db(e / ref_rms)), 1)
+
+
 def d6_stop():
+    """STOP (insert): tape stops over stop_time, held 2.5 s, restarts. Click at stop and restart, recovery."""
     src = riddim(4)
     n = len(src) + 3 * SR
     src = np.concatenate([src, np.zeros(3 * SR)])
     t = np.arange(n) / SR
-    stop = ((t > 3 * 4 * BEAT) & (t < 3 * 4 * BEAT + 2.5)) * 1.0
-    o = render(src, vary={"tape_stop": stop}, echo=0.5, sustain=0.55, stop_time=1.2, **SYNC_DOT8)
-    save("D6_tape_stop_insert.wav", o[:, 0])
-    note("D6.peak", round(float(np.abs(o[:, 0]).max()), 3))
+    t_on, t_off = 3 * 4 * BEAT, 3 * 4 * BEAT + 2.5
+    stop = ((t > t_on) & (t < t_off)) * 1.0
+    kw = dict(echo=0.5, sustain=0.55, stop_time=1.2, **SYNC_DOT8)
+    o = render(src, vary={"tape_stop": stop}, **kw)
+    ref = render(src, **kw)
+    y, yr = o[:, 0], ref[:, 0]
+    save("D6_tape_stop_insert.wav", y)
+    mus = rms(yr[int(SR):int(t_on * SR)])
+    note("D6.peak", round(float(np.abs(y).max()), 3))
+    note("D6.hf_burst_at_stop_db_re_music_rms", hf_burst_db(y, t_on, mus))
+    note("D6.hf_burst_at_restart_db_re_music_rms", hf_burst_db(y, t_off, mus))
+    note("D6.hf_burst_same_moments_without_stop_db", [hf_burst_db(yr, t_on, mus), hf_burst_db(yr, t_off, mus)])
+    e = lambda z, a, b: db(rms(z[int(a * SR):int(b * SR)]))
+    note("D6.level_before_stop_dbfs", round(float(e(y, t_on - 1, t_on)), 1))
+    note("D6.level_last_second_of_stop_dbfs", round(float(e(y, t_off - 1, t_off)), 1))
+    note("D6.level_1s_after_restart_vs_no_stop_db", round(float(e(y, t_off + 0.5, t_off + 1.5) - e(yr, t_off + 0.5, t_off + 1.5)), 1))
+    note("D6.level_3s_after_restart_vs_no_stop_db", round(float(e(y, t_off + 2.5, t_off + 3.5) - e(yr, t_off + 2.5, t_off + 3.5)), 1))
+
+
+# ------------------------------------------------------------------ D10 delay change while playing
+def d10_delay_move():
+    """insert, riddim playing, echo running; Echo Delay slider moved by hand (0.3 s) and thrown (30 ms)"""
+    src = riddim(6)
+    n = len(src)
+    t = np.arange(n) / SR
+    kw = dict(echo=0.5, sustain=0.55, glide_ms=60)
+    pos = np.interp(t, [0, 4, 4.3, 9, 9.03, 20], [0.4, 0.4, 0.6, 0.6, 0.25, 0.25])
+    o = render(src, vary={"slider_pos": pos}, **kw)
+    ref = render(src, slider_pos=0.4, **kw)
+    y, yr = o[:, 0], ref[:, 0]
+    save("D10_delay_change_while_playing.wav", y)
+    mus = rms(yr[int(SR):int(4 * SR)])
+    note("D10.peak", round(float(np.abs(y).max()), 3))
+    def excess(t0, t1):
+        """worst HF-burst excess over the unmoved render at the same moments (dB); ~0 = nothing added"""
+        return round(max(hf_burst_db(y, tt, mus, 0.02) - hf_burst_db(yr, tt, mus, 0.02) for tt in np.arange(t0, t1, 0.02)), 1)
+    note("D10.hf_burst_excess_hand_move_db", excess(4.0, 4.9))
+    note("D10.hf_burst_excess_throw_db", excess(9.0, 9.7))
+    note("D10.hf_burst_hand_move_db_re_music_rms", max(hf_burst_db(y, tt, mus, 0.02) for tt in np.arange(4.0, 4.9, 0.04)))
+    lv = lambda z, a, b: db(rms(z[int(a * SR):int(b * SR)]))
+    note("D10.level_change_during_moves_db", [round(float(lv(y, a, a + 1) - lv(yr, a, a + 1)), 1) for a in (4.0, 9.0)])
 
 
 # ------------------------------------------------------------------ D7 DRIVE throw
@@ -309,7 +357,7 @@ def d9_tone():
 
 
 if __name__ == "__main__":
-    for f in (d1_throw, d2_ride, d3_siren, d4_filter, d5_hold, d5b_hold_resonance, d6_stop, d7_drive, d8_sos, d9_tone):
+    for f in (d1_throw, d2_ride, d3_siren, d4_filter, d5_hold, d5b_hold_resonance, d6_stop, d7_drive, d8_sos, d9_tone, d10_delay_move):
         print("##", f.__name__, flush=True)
         f()
     RES.setdefault("NAN", [])

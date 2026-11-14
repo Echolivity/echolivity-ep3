@@ -1,0 +1,7 @@
+test_derived exit=0 0s :: 7/7 passed
+test_ep3 exit=0 6s :: 19/19 passed
+test_ui_theme exit=0 0s :: 5/5 passed
+test_workflow exit=0 0s :: 8/8 passed
+test_remediation exit=0 170s :: 14/14 passed
+golden: 9 identical, 0 differ; 4 tier-B self-checks pass
+DONE

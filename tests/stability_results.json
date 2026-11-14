@@ -1,0 +1,72 @@
+{
+ "cpu_proxy": {
+  "44100.idle": {
+   "ns_per_sample": 435.8,
+   "pct_of_one_core_realtime": 1.92
+  },
+  "44100.load": {
+   "ns_per_sample": 449.0,
+   "pct_of_one_core_realtime": 1.98
+  },
+  "48000.idle": {
+   "ns_per_sample": 424.2,
+   "pct_of_one_core_realtime": 2.04
+  },
+  "48000.load": {
+   "ns_per_sample": 449.8,
+   "pct_of_one_core_realtime": 2.16
+  },
+  "96000.idle": {
+   "ns_per_sample": 387.8,
+   "pct_of_one_core_realtime": 3.72
+  },
+  "96000.load": {
+   "ns_per_sample": 435.4,
+   "pct_of_one_core_realtime": 4.18
+  }
+ },
+ "long_run_48k": {
+  "automated": {
+   "minutes": 30,
+   "finite": true,
+   "peak": 0.9661,
+   "ceiling_linear": 0.9661,
+   "rms_1s_max_dbfs": -6.9,
+   "rms_1s_median_dbfs": -13.9,
+   "seconds_above_minus6dBFS_rms": 0,
+   "hf_jump_windows_gt20dB": 146,
+   "hf_jump_worst_db": 27.9,
+   "hf_jump_cause_counts": {
+    "none within 2.5 s (rampsly)": 45,
+    "drive (off)": 25,
+    "pb_eq switch": 25,
+    "pre_bypass switch": 17,
+    "hold (on)": 11,
+    "hold (off)": 9,
+    "tape_stop (on)": 8,
+    "tape_stop (off)": 3,
+    "drive (on)": 3
+   },
+   "hf_burst_db_re_broadband_rms_max": -39.8,
+   "hf_burst_db_re_broadband_rms_median": -54.1,
+   "ns_per_sample": 640.7,
+   "render_wall_s": 343.5
+  },
+  "control_no_automation": {
+   "minutes": 30,
+   "finite": true,
+   "peak": 0.7233,
+   "ceiling_linear": 0.9661,
+   "rms_1s_max_dbfs": -12.8,
+   "rms_1s_median_dbfs": -13.8,
+   "seconds_above_minus6dBFS_rms": 0,
+   "hf_jump_windows_gt20dB": 4,
+   "hf_jump_worst_db": 21.5,
+   "hf_jump_cause_counts": {},
+   "hf_burst_db_re_broadband_rms_max": null,
+   "hf_burst_db_re_broadband_rms_median": null,
+   "ns_per_sample": 420.6,
+   "render_wall_s": 59.1
+  }
+ }
+}
