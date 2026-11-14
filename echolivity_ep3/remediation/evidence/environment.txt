@@ -1,0 +1,9 @@
+date (UTC): 2026-11-14T14:51:45Z
+Linux 6.18.44-fc-v470 x86_64
+Python 3.13.18
+numpy 2.5.3 | scipy 1.18.1
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Max 9: not available
+Ableton Live 12: not available
+baseline: /home/claude/echolivity_ep3_v0.1.0-dev_baseline (read-only), engine sha256 2a46b3b27ac584f840d972619d70243dedd9b33b63a9e341d3970080f739a50b
+fixed engine sha256 578c0ba81f41bd0cc2968c08ce338d65dd2c3adced2670cc235eb6816b7631db

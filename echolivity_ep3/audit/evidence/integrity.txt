@@ -1,0 +1,11 @@
+Integrity and structure checks (Python, on the built files; not a Max test)
+device codebox identical to dsp/ep3_core.genexpr: True
+.amxd payload identical to .maxpat: True
+patch cords referencing missing boxes or bad inlets/outlets: 0
+messages to gen~ naming no Param: none
+engine Params with no control or host source: none
+UI parameter defaults differing from engine defaults: none (slider_pos is 50 % in UI = 0.5 in engine)
+overlapping visible controls: none
+Live parameters: 54 | unique long names: True
+genexpr sha256: 2a46b3b27ac584f840d972619d70243dedd9b33b63a9e341d3970080f739a50b
+rebuilt .amxd identical to the project's .amxd: True
