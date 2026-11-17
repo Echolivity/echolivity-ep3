@@ -1,0 +1,17 @@
+PASS W01 Shipped Insert and Return devices equal a fresh build
+     insert identical, return identical
+FAIL W02 Insert device = v0.1.2-dev except version text, parameter order and the bank (all boxes, cords, parameters, defaults, engine code)
+     changed boxes besides header: ['obj-2']; cords identical: True; parameter registry same content: True; other patcher keys changed: none; engine code identical: True; Echo Volume default 0.5
+PASS W03 Return variant differs from Insert only in Echo Volume default (1.0) and RETURN labelling; same parameter names (presets / mappings interchange)
+     parameters whose definition differs: ['Echo Volume']; Return Echo Volume default 1.0; other box differences: none
+PASS W04i [insert] Controller bank 'Dub' = Sustain, Echo Volume, Echo Delay, Repeat LP, Repeat HP, HOLD, DRIVE, STOP; same order first in registry and box list; all Automated and Stored
+     bank: ['Echo Sustain', 'Echo Volume', 'Echo Delay', 'Repeat LP', 'Repeat HP', 'HOLD Latch', 'DRIVE Latch', 'STOP Latch']; registry[:8] = bank: True; box order[:8] = bank: True; automatable: True
+PASS W04r [return] Controller bank 'Dub' = Sustain, Echo Volume, Echo Delay, Repeat LP, Repeat HP, HOLD, DRIVE, STOP; same order first in registry and box list; all Automated and Stored
+     bank: ['Echo Sustain', 'Echo Volume', 'Echo Delay', 'Repeat LP', 'Repeat HP', 'HOLD Latch', 'DRIVE Latch', 'STOP Latch']; registry[:8] = bank: True; box order[:8] = bank: True; automatable: True
+PASS W05 Parameter long and short names unique (case-insensitive); all eight bank controls on the main panel, none hidden by ADVANCED
+     55 long names unique: True; short names unique: True; bank controls in presentation: 8/8; hidden by ADVANCED: none
+PASS W06 Return configuration (Echo Volume 1) passes no dry signal (< -60 dB, tape noise on); Insert settings pass dry as before
+     Echo Volume 1.0: dry-window peak -65.7 dB re input; Echo Volume 0.5: dry-window peak -0.6 dB re input; Echo Volume 0.0: dry-window peak -1.4 dB re input
+PASS W07 Return use: dry track + return output keeps the dry at its own level (Return variant); the Insert default would add the dry again
+     dry level in the summed mix: Return variant +0.00 dB (expect 0); Insert default Echo Volume 0.5 +5.72 dB (the pitfall the Return variant removes)
+7/8 passed

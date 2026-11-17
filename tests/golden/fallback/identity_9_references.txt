@@ -1,0 +1,9 @@
+same expect_BEH1_hold_bright.json
+same expect_BEH2_hold_dark.json
+same expect_BEH3_echo_tone_switch.json
+same expect_BEH4_loop_change.json
+same expect_GOLD1_bright_feedback.wav
+same expect_GOLD2_dark_feedback.wav
+same expect_GOLD3_sos_loop2s.wav
+same expect_GOLD4_oscillation_short.wav
+same expect_GOLD5_voice_late_cable0.wav

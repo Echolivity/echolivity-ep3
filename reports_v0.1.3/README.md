@@ -16,6 +16,9 @@
 | 12 | Implementation report | `EP3_IMPLEMENTATION_REPORT.md` |
 | 13 | Known issues and limitations register | `EP3_KNOWN_ISSUES.md` |
 | 14 | Owner testing guide | `EP3_OWNER_TESTING_GUIDE.md` (+ `docs/TEST_PLAN_Max_Live.md`) |
+| — | One-click host check (Windows) | `../RUN_HOST_CHECKS.bat` (addendum 2026-11-18) |
+| — | K-03 HOLD/DARK candidate (not shipped) | `../experimental/hold_dark_loop/README.md` |
+| — | Pre-flight checks (format, Ableton checklist, Gen names) | `EP3_PREFLIGHT_CHECKS.md`; fallback test patch `../tests/golden/fallback/` |
 | — | Regression results | `EP3_REGRESSION_REPORT.md`; raw logs `../remediation/evidence_v0.1.3/archive_run/` |
 
 Re-run everything: `for t in test_derived test_ep3 test_ui_theme test_workflow test_remediation; do python3 tests/$t.py; done` (Python 3, numpy, scipy, gcc).

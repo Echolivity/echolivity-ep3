@@ -1,0 +1,3 @@
+PASS E17 TAP: four taps at 100 BPM -> 1/4 = 600 ms; dotted 1/8 = 450 ms — tap BPM 100.000; 1/4 delay 600.00 ms; dotted 1/8 450.00 ms
+PASS C01 CPU proxy (C translation, gcc -O2, includes per-sample timer overhead) — 442 ns/sample = 2.12 % of one core at 48 kHz (not a Live measurement)
+19/19 passed

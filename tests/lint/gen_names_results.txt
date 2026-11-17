@@ -1,0 +1,17 @@
+== dsp/ep3_core.genexpr: 7 finding(s)
+  MEDIUM s            History declared with a built-in name
+  LOW    f            function argument with an operator name (in fsmooth)
+  LOW    f            function argument with an operator name (in hermite)
+  LOW    s            local variable with an operator name
+  LOW    i            local variable with an operator name
+  LOW    gtp          local variable with an operator name
+  LOW    f            local variable with an operator name
+== tests/golden/fallback/ep3_core_fallback.genexpr: 0 finding(s)
+== experimental/hold_dark_loop/ep3_core_k03.genexpr: 7 finding(s)
+  MEDIUM s            History declared with a built-in name
+  LOW    f            function argument with an operator name (in fsmooth)
+  LOW    f            function argument with an operator name (in hermite)
+  LOW    s            local variable with an operator name
+  LOW    i            local variable with an operator name
+  LOW    gtp          local variable with an operator name
+  LOW    f            local variable with an operator name

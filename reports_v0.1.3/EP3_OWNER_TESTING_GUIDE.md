@@ -15,9 +15,10 @@ Record everything in `remediation/host_evidence/` (create it): console text, scr
 
 1. In Max: Options → Audio Status, set **48000** Hz.
 2. Open `tests/golden/EP3_host_harness.maxpat`. Open the Max Console.
-   - **G01:** any red gen~ error means FAIL. Copy it out, stop here, and send it back. Nothing else matters until the engine compiles.
+   - **G01:** any red gen~ error means FAIL. Copy it out and send it back. Nothing else matters until the engine compiles.
+   - **If the error names `s`, `f`, `i` or `gtp`:** open `tests/golden/fallback/EP3_host_harness_FALLBACK_NAMES.maxpat` (same engine with those names changed, proven identical) and carry on with it. The checker picks up its renders too. Note which patch you used.
 3. Press RUN for GOLD1…GOLD5 and BEH1…BEH4, one at a time (BEH1/BEH2 take 32 s). Each writes `out_<name>_max.wav` next to the patch.
-4. From the project folder:
+4. **Windows:** double-click `RUN_HOST_CHECKS.bat` in the project folder. It installs numpy/scipy if needed, checks all nine renders and saves a PASS / FAIL / NOT RUN report in `remediation/host_evidence/`. Or by hand, from the project folder:
    ```sh
    for n in GOLD1_bright_feedback GOLD2_dark_feedback GOLD3_sos_loop2s GOLD4_oscillation_short GOLD5_voice_late_cable0; do
      python3 tests/golden/compare.py tests/golden/expect_$n.wav tests/golden/out_${n}_max.wav; done

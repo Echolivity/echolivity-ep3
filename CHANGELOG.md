@@ -1,5 +1,11 @@
 # Changelog — Echolivity EP-3
 
+## v0.1.3-dev package addendum (2026-11-18) — no change to the devices or the engine
+- Pre-flight checks (`reports_v0.1.3/EP3_PREFLIGHT_CHECKS.md`): .amxd container and Push bank format compared with Ableton's own devices and parser (maxdevtools), objects against Ableton's known-object list, Ableton's M4L production checklist (findings B-1…B-7), engine names against the official Gen operator list (`tests/lint/gen_names.py`: 0 HIGH).
+- Fallback test patch `tests/golden/fallback/` (engine locals renamed, 9/9 references byte-identical, 19/19); `run_host_checks.py` also reads its renders.
+- `RUN_HOST_CHECKS.bat` + `tests/golden/run_host_checks.py`: one-click check of the Max harness renders (PASS / FAIL / NOT RUN report in `remediation/host_evidence/`). Tested on the PASS, FAIL and NOT RUN paths with C renders.
+- `experimental/hold_dark_loop/`: K-03 candidate engine (loop uses the BRIGHT de-emphasis during HOLD), measurements, regression on the candidate (14/14 remediation; W02 fails as expected), A/B listening files. Not in any device; needs the owner's decision.
+
 ## v0.1.3-dev (2026-11-14) — dub workflow, reproducible regression, HOLD assessment
 - Controller bank "Dub" (first eight): Echo Sustain, Echo Volume, Echo Delay, Repeat LP, Repeat HP, HOLD Latch, DRIVE Latch, STOP Latch; also first in parameter and box order. No parameter renamed. Live/Push use: UNVERIFIED.
 - New Return variant `devices/Echolivity_EP3_v0.1.3-dev_Return.amxd` (Echo Volume default 1, fully wet). Insert device and its defaults unchanged.
