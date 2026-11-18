@@ -63,6 +63,8 @@ def text(xy, s, f, fill, anchor="la"):
 
 
 boxes = [b["box"] for b in p["boxes"] if b["box"].get("presentation") and not b["box"].get("hidden")]
+# Max draws background-layer objects (background = 1) behind all others, whatever their order in the file
+boxes.sort(key=lambda b: 0 if b.get("background") else 1)
 for b in boxes:
     cls = b["maxclass"]
     r = b["presentation_rect"]

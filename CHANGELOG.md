@@ -1,5 +1,9 @@
 # Changelog — Echolivity EP-3
 
+## Repository front page (2026-11-18) — no change to the devices or the engine
+- New README in the Echolivity collection style: machine overview, Insert / Return choice, dub bank, performance panel, themes, dub moves with audio links, validation status, known limitations.
+- Panel images `docs/images/` rendered from the v0.1.3-dev devices (approximate). `build/render_preview.py` now draws background-layer objects first, as Max does; before, the eight bank controls (moved to the front of the box list in v0.1.3) were painted over by their panels in previews only.
+
 ## v0.1.3-dev package addendum (2026-11-18) — no change to the devices or the engine
 - Pre-flight checks (`reports_v0.1.3/EP3_PREFLIGHT_CHECKS.md`): .amxd container and Push bank format compared with Ableton's own devices and parser (maxdevtools), objects against Ableton's known-object list, Ableton's M4L production checklist (findings B-1…B-7), engine names against the official Gen operator list (`tests/lint/gen_names.py`: 0 HIGH).
 - Fallback test patch `tests/golden/fallback/` (engine locals renamed, 9/9 references byte-identical, 19/19); `run_host_checks.py` also reads its renders.
