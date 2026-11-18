@@ -1,0 +1,90 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Anton;src:url(node_modules/@fontsource/anton/files/anton-latin-400-normal.woff2)}
+@font-face{font-family:Barlow;font-weight:600;src:url(node_modules/@fontsource/barlow-condensed/files/barlow-condensed-latin-600-normal.woff2)}
+@font-face{font-family:Barlow;font-weight:400;src:url(node_modules/@fontsource/barlow-condensed/files/barlow-condensed-latin-400-normal.woff2)}
+@font-face{font-family:Plex;src:url(node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1600px;height:600px;overflow:hidden;background:#0d0c0b}
+.wrap{position:relative;width:1600px;height:600px;
+  background:
+   radial-gradient(ellipse at 30% 0%,rgba(255,240,210,.07),transparent 60%),
+   radial-gradient(ellipse at 90% 110%,rgba(200,55,45,.10),transparent 55%),
+   #121110}
+.grain{position:absolute;inset:0;opacity:.55;mix-blend-mode:overlay}
+/* faceplate */
+.plate{position:absolute;left:56px;top:56px;width:690px;height:488px;border-radius:14px;
+  background:
+   repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,rgba(0,0,0,.035) 1px 3px),
+   linear-gradient(180deg,#3b3a38 0%,#2a2928 55%,#232221 100%);
+  box-shadow:0 0 0 1px #4a4845, inset 0 1px 0 rgba(255,255,255,.18), inset 0 -2px 0 rgba(0,0,0,.5), 0 30px 60px rgba(0,0,0,.6)}
+.screw{position:absolute;width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#d9d6cf,#77746e 60%,#3c3a37);box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)}
+.screw:after{content:"";position:absolute;left:3px;right:3px;top:7px;height:2px;background:#3a3835;transform:rotate(35deg)}
+.brand{position:absolute;left:58px;top:52px;font:600 22px/1 Barlow;letter-spacing:.42em;color:#cfc4ac}
+.model{position:absolute;left:52px;top:82px;font:400 250px/1 Anton;color:#efe3c6;letter-spacing:.01em;
+  text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.kind{position:absolute;left:60px;top:345px;font:600 50px/1 Barlow;letter-spacing:.34em;color:#efe3c6}
+.rule{position:absolute;left:60px;top:410px;width:570px;height:2px;background:linear-gradient(90deg,#c8372d 0 64px,#6a655c 64px)}
+.spec{position:absolute;left:60px;top:430px;font:500 17px/1.5 Plex;letter-spacing:.08em;color:#b9ad95}
+.lamp{position:absolute;right:58px;top:52px;display:flex;align-items:center;gap:12px;font:600 18px/1 Barlow;letter-spacing:.3em;color:#cfc4ac}
+.lamp i{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ff8f80,#d8392c 55%,#7a1a14);
+  box-shadow:0 0 18px 4px rgba(230,60,45,.55),0 0 0 3px #1b1a19,0 0 0 4px #5a5752}
+/* tape drawing */
+.tape{position:absolute;left:790px;top:40px;width:770px;height:520px}
+.cap{font:600 15px Barlow;letter-spacing:.28em;fill:#cfc4ac}
+.capr{font:600 15px Barlow;letter-spacing:.28em;fill:#ff7a6c}
+.mono{font:500 14px Plex;letter-spacing:.06em;fill:#9d927c}
+.foot{position:absolute;right:56px;top:36px;font:600 16px Barlow;letter-spacing:.36em;color:#7d766a}
+</style></head><body><div class="wrap">
+<svg class="grain" width="1600" height="600"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .55 0"/></filter><rect width="1600" height="600" filter="url(#n)"/></svg>
+
+<div class="plate">
+  <span class="screw" style="left:18px;top:18px"></span><span class="screw" style="right:18px;top:18px"></span>
+  <span class="screw" style="left:18px;bottom:18px"></span><span class="screw" style="right:18px;bottom:18px"></span>
+  <div class="brand">ECHOLIVITY</div>
+  <div class="lamp">REC <i></i></div>
+  <div class="model">EP-3</div>
+  <div class="kind">TAPE ECHO</div>
+  <div class="rule"></div>
+  <div class="spec">MOVING RECORD HEAD · 8 IPS · SOUND-ON-SOUND<br>FET PREAMP · PASSIVE MIX · MAX FOR LIVE</div>
+</div>
+
+<svg class="tape" viewBox="0 0 770 520">
+  <defs>
+    <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e7e3da"/><stop offset=".45" stop-color="#9b978f"/><stop offset=".55" stop-color="#6f6c66"/><stop offset="1" stop-color="#c9c5bc"/></linearGradient>
+    <linearGradient id="chromeR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd7d0"/><stop offset=".45" stop-color="#d8574a"/><stop offset=".55" stop-color="#a3322a"/><stop offset="1" stop-color="#f0a497"/></linearGradient>
+    <marker id="ar" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff7a6c"/></marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9d927c"/></marker>
+  </defs>
+  <!-- cartridge outline -->
+  <rect x="40" y="150" width="690" height="300" rx="150" fill="none" stroke="#2d2b29" stroke-width="44"/>
+  <!-- tape loop -->
+  <rect x="40" y="150" width="690" height="300" rx="150" fill="none" stroke="#5a3d22" stroke-width="14"/>
+  <rect x="40" y="150" width="690" height="300" rx="150" fill="none" stroke="#8a5f37" stroke-width="2" stroke-dasharray="2 16" opacity=".8"/>
+  <!-- direction -->
+  <path d="M 470 466 L 300 466" stroke="#9d927c" stroke-width="2" marker-end="url(#ag)" transform="translate(0,22)"/>
+  <text x="385" y="512" text-anchor="middle" class="mono">TAPE TRAVEL · 8 IN/S</text>
+  <!-- capstan -->
+  <circle cx="610" cy="300" r="34" fill="#1b1a19" stroke="#5a5752" stroke-width="3"/><circle cx="610" cy="300" r="9" fill="url(#chrome)"/>
+  <text x="610" y="364" text-anchor="middle" class="mono">CAPSTAN</text>
+  <!-- rail for the moving head -->
+  <line x1="218" y1="96" x2="452" y2="96" stroke="#5a5752" stroke-width="6" stroke-linecap="round"/>
+  <line x1="236" y1="70" x2="436" y2="70" stroke="#ff7a6c" stroke-width="2.5" marker-start="url(#ar)" marker-end="url(#ar)"/>
+  <text x="336" y="56" text-anchor="middle" class="capr">THE RECORD HEAD MOVES</text>
+  <!-- heads on the top run of tape (y=150) -->
+  <g><rect x="110" y="108" width="54" height="40" rx="6" fill="url(#chrome)" stroke="#2a2826"/><rect x="132" y="146" width="10" height="6" fill="#2a2826"/>
+     <text x="137" y="206" text-anchor="middle" class="cap">S-O-S</text></g>
+  <g><rect x="306" y="102" width="62" height="46" rx="6" fill="url(#chromeR)" stroke="#3a1612"/><rect x="332" y="146" width="10" height="6" fill="#3a1612"/>
+     <text x="337" y="206" text-anchor="middle" class="capr">RECORD · ERASE</text></g>
+  <g><rect x="560" y="108" width="54" height="40" rx="6" fill="url(#chrome)" stroke="#2a2826"/><rect x="582" y="146" width="10" height="6" fill="#2a2826"/>
+     <text x="587" y="206" text-anchor="middle" class="cap">ECHO</text></g>
+  <!-- delay dimension -->
+  <line x1="337" y1="238" x2="587" y2="238" stroke="#9d927c" stroke-width="1.5" marker-start="url(#ag)" marker-end="url(#ag)"/>
+  <line x1="337" y1="224" x2="337" y2="252" stroke="#9d927c" stroke-width="1"/><line x1="587" y1="224" x2="587" y2="252" stroke="#9d927c" stroke-width="1"/>
+  <text x="462" y="270" text-anchor="middle" class="mono">DELAY 60–600 MS</text>
+  <text x="385" y="330" text-anchor="middle" class="mono" style="fill:#6e675b">ORIGINAL LOOP ≈ 75 FT · 112.5 S</text>
+</svg>
+<div class="foot">CLASSIC ECHO COLLECTION</div>
+</div></body></html>

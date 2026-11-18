@@ -1,6 +1,7 @@
 # Changelog — Echolivity EP-3
 
 ## Repository front page (2026-11-18) — no change to the devices or the engine
+- Second pass: EP-3 now has its own identity, separate from the H&H page. A stage-box banner (`docs/images/ep3_banner.png`, HTML source in `docs/images/src/`) draws the tape loop with S-O-S, the moving record/erase head and the echo head. Sections: Plug in, The moving head, The loop, Foot controls, Dub moves, The front panel, Road-tested?, Known quirks.
 - New README in the Echolivity collection style: machine overview, Insert / Return choice, dub bank, performance panel, themes, dub moves with audio links, validation status, known limitations.
 - Panel images `docs/images/` rendered from the v0.1.3-dev devices (approximate). `build/render_preview.py` now draws background-layer objects first, as Max does; before, the eight bank controls (moved to the front of the box list in v0.1.3) were painted over by their panels in previews only.
 
