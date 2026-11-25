@@ -1,5 +1,11 @@
 # Changelog — Echolivity EP-3
 
+## Hardware panel (branch `hw-panel`, 2026-11-26) — no change to the DSP or the parameters
+- Echolivity hardware-replica look: one rendered faceplate per theme (brushed finish, section plates and accent bars painted in) and image knobs (black, spun-aluminium caps) under every dial; the dials' own arcs are transparent, names and values stay themed. The THEME switch also swaps the faceplate image; the ADVANCED view shows/hides the advanced knob images with their dials.
+- Images `devices/ep3_*.png` (1x and @2x), rendered by `build/render_panel.py` with the shared `build/hwpanel.py`, shared by the Insert and Return devices. **Keep them next to the .amxd** (or Freeze the device in Max); a fallback note shows if they're missing.
+- Unchanged: all 55 parameters, the Dub bank, gen~ code. `EP3_HW=0` builds the patch without the image layer; W02 compares that with v0.1.2-dev, new W09 checks the image layer adds only images and their drivers. Tests: EP-3 19/19, workflow 9/9, derived 7/7, remediation 14/14, UI theme 5/5.
+- Max 9 / Live 12: not run.
+
 ## Repository front page (2026-11-18) — no change to the devices or the engine
 - Second pass: EP-3 now has its own identity, separate from the H&H page. A stage-box banner (`docs/images/ep3_banner.png`, HTML source in `docs/images/src/`) draws the tape loop with S-O-S, the moving record/erase head and the echo head. Sections: Plug in, The moving head, The loop, Foot controls, Dub moves, The front panel, Road-tested?, Known quirks.
 - New README in the Echolivity collection style: machine overview, Insert / Return choice, dub bank, performance panel, themes, dub moves with audio links, validation status, known limitations.

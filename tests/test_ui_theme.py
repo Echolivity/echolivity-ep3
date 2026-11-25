@@ -53,10 +53,17 @@ def apply(boxes, text):
     for part in text.split(", "):
         tok = part.split()
         assert tok[:2] == ["script", "sendbox"]
-        var, attr, vals = tok[2], tok[3], [float(v) for v in tok[4:]]
+        var, attr = tok[2], tok[3]
         if var not in byvar:
             missing.append(var)
             continue
+        if attr == "pic":       # hardware panel: the faceplate image follows the theme
+            if byvar[var]["maxclass"] != "fpic" or len(tok) != 5 or not tok[4].endswith(".png"):
+                bad.append(part)
+            byvar[var]["pic"] = tok[4]
+            n += 1
+            continue
+        vals = [float(v) for v in tok[4:]]
         if len(vals) != 4 or not all(0 <= v <= 1 for v in vals):
             bad.append(part)
         byvar[var][attr] = vals
@@ -84,8 +91,10 @@ n_el, miss1, bad1 = apply(sim, M["el"])
 err_el, nk = max_err(sim, LB, LB)
 n_em, miss2, bad2 = apply(sim, M["ember"])
 err_back, _ = max_err(sim, EB, EB)
+_s2 = copy.deepcopy(EB); apply(_s2, M["el"])
+pics_ok = all(_s2[i].get("pic") == LB[i].get("pic") for i in LB) and all(sim[i].get("pic") == EB[i].get("pic") for i in EB)
 check("TH01", "EL message turns the EMBER patch into the EL palette; EMBER message restores it",
-      err_el < 1e-4 and err_back < 1e-4,
+      err_el < 1e-4 and err_back < 1e-4 and pics_ok,
       f"{n_el} colour changes; worst error vs EL build {err_el:.1e}, vs original after switching back {err_back:.1e} "
       f"(over {nk} colour attributes, %.4g rounding)")
 
@@ -114,7 +123,8 @@ check("TH03", "Theme selector stored with the set, not automatable; wired to thi
 
 # TH04
 def strip(b):
-    b = {k: v for k, v in b.items() if k not in colour_keys(b) and k not in ("text",)}
+    b = {k: v for k, v in b.items() if k not in colour_keys(b) and k not in ("text",)
+         and not (b["maxclass"] == "fpic" and k == "pic")}
     va = b.get("saved_attribute_attributes", {}).get("valueof")
     if va:
         b = copy.deepcopy(b)

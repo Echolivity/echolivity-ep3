@@ -27,8 +27,8 @@ def rec(tid, name, ok, detail):
     print(("PASS " if ok else "FAIL ") + f"{tid} {name}\n     {detail}", flush=True)
 
 
-def build(variant, name):
-    env = dict(os.environ, EP3_VARIANT=variant, EP3_DEVICE_NAME=name, PYTHONDONTWRITEBYTECODE="1")
+def build(variant, name, hw="1"):
+    env = dict(os.environ, EP3_VARIANT=variant, EP3_DEVICE_NAME=name, PYTHONDONTWRITEBYTECODE="1", EP3_HW=hw)
     subprocess.run([sys.executable, os.path.join(ROOT, "build", "build_device.py")], env=env, check=True, capture_output=True)
     d = json.load(open(os.path.join(ROOT, "devices", name + ".maxpat")))["patcher"]
     for ext in (".maxpat", ".amxd"):
@@ -68,7 +68,10 @@ def main():
     rec("W01", "Shipped Insert and Return devices equal a fresh build", fresh_ins == ins and fresh_ret == ret,
         f"insert {'identical' if fresh_ins == ins else 'DIFFERENT'}, return {'identical' if fresh_ret == ret else 'DIFFERENT'}")
 
-    # W02 Insert device vs v0.1.2-dev: only the intended differences
+    # W02 Insert device vs v0.1.2-dev: only the intended differences. Compared on the build
+    # without the hardware-panel image layer (EP3_HW=0); W09 checks that layer adds images only.
+    hwfull = ins
+    ins = build("insert", "_wf_nohw", hw="0")
     hdr = [b["box"]["id"] for b in ins["boxes"] if "v0.1.3-dev" in b["box"].get("text", "")]
     a, b = norm_boxes(ref, hdr), norm_boxes(ins, hdr)
     box_diff = sorted(k for k in set(a) | set(b) if a.get(k) != b.get(k))
@@ -82,6 +85,7 @@ def main():
     rec("W02", "Insert device = v0.1.2-dev except version text, parameter order and the bank (all boxes, cords, parameters, defaults, engine code)",
         ok, f"changed boxes besides header: {box_diff or 'none'}; cords identical: {lines_same}; parameter registry same content: {reg_ref == reg_ins}; "
             f"other patcher keys changed: {other or 'none'}; engine code identical: {gen_same}; Echo Volume default {params(ins)['Echo Volume'][1]['parameter_initial'][0]}")
+    nohw, ins = ins, hwfull
 
     # W03 Return vs Insert: only Echo Volume default and labelling
     pi, pr = params(ins), params(ret)
@@ -154,6 +158,24 @@ def main():
     o2, _ = ep3sim.run_c(x, sr, echo=0.5, slider_pos=50, sustain=0.4, quiet=False)
     mix2 = x + o2[:, 0]
     dup2 = 20 * np.log10(np.abs(mix2[int(0.1 * sr):int(0.16 * sr)]).max() / np.abs(x).max())
+    # W09 hardware panel layer: images and their drivers only; parameters, engine and audio cords unchanged
+    hb = {b["box"]["id"]: b["box"] for b in hwfull["boxes"]}
+    nb = {b["box"]["id"]: b["box"] for b in nohw["boxes"]}
+    added = [b for i, b in hb.items() if i not in nb or nb[i]["maxclass"] != b["maxclass"]]
+    kinds = sorted({b["maxclass"] if b["maxclass"] != "newobj" else b["text"].split()[0] for b in added})
+    p_same = params(hwfull).keys() == params(nohw).keys() and all(
+        params(hwfull)[k][1] == params(nohw)[k][1] for k in params(nohw))
+    g = lambda P: [x["box"].get("code") for x in P["boxes"] if "code" in x["box"]]
+    nfp = sum(1 for b in hwfull["boxes"] if b["box"]["maxclass"] == "fpic")
+    deps = {d["name"] for d in hwfull["dependency_cache"]}
+    pics = {b["box"]["pic"] for b in hwfull["boxes"] if b["box"]["maxclass"] == "fpic"}
+    imgs_ok = all(os.path.exists(os.path.join(ROOT, "devices", n)) for n in deps) and pics <= deps
+    rec("W09", "Hardware panel layer adds only images (fpic), their frame drivers, the theme/ADVANCED messages' image lines and a fallback note; parameters and engine identical",
+        set(kinds) <= {"fpic", "expr", "prepend", "comment", "sel", "thispatcher", "message", "live.thisdevice"}
+        and p_same and g(hwfull) == g(nohw) and imgs_ok,
+        f"{nfp} fpic images; added/renumbered box kinds {kinds}; parameters identical {p_same}; "
+        f"engine identical {g(hwfull) == g(nohw)}; {len(deps)} images listed and present {imgs_ok}")
+
     rec("W07", "Return use: dry track + return output keeps the dry at its own level (Return variant); the Insert default would add the dry again",
         abs(dup) < 0.1, f"dry level in the summed mix: Return variant {dup:+.2f} dB (expect 0); Insert default Echo Volume 0.5 {dup2:+.2f} dB (the pitfall the Return variant removes)")
 

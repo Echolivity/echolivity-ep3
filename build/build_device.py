@@ -13,7 +13,9 @@ Outputs
 
 Run: python3 build/build_device.py
 """
-import json, os, struct
+import json, os, struct, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hwpanel
 VARIANT = os.environ.get("EP3_VARIANT", "insert")
 assert VARIANT in ("insert", "return"), VARIANT
 
@@ -122,7 +124,83 @@ def run_layout(pal):
     _n[0] = _snap[2]
     globals()["_PAL"] = pal
     exec(LAYOUT, globals())
+    if os.environ.get("EP3_HW", "1") == "1":     # EP3_HW=0: the pre-hardware-panel patch (tests W02/W09)
+        hardware_panel(pal)
     return json.loads(json.dumps(boxes))
+
+
+# ---- hardware-replica panel (Echolivity family look) ---------------------------
+# One rendered faceplate per theme (the background, section plates and accent bars
+# painted in), image knobs (black, spun-aluminium caps) under every live.dial, whose
+# own knob graphics are transparent (name and value stay, themed). The plates stay
+# in the patch (same ids) but transparent. The faceplate image follows the THEME
+# switch ("pic" message); knobs are the same in both themes.
+# Images: devices/ep3_*.png (1x, @2x), rendered by build/render_panel.py.
+FACE = {"ember": "ep3_faceplate.png", "el": "ep3_el_faceplate.png"}
+SPECS = {}
+
+
+def hardware_panel(pal):
+    spec = {"prefix": "ep3_", "W": int(DEVW), "H": 169, "screws": False, "paint": [], "frames_flat": [],
+            "knobs": {}, "knob_boxes": {},
+            "finish": {"base": tuple(round(c * 255) for c in C["bg"][:3]), "texture": "brushed",
+                       "legend": tuple(round(c * 255) for c in C["legend"][:3])}}
+    first = None
+    for b in boxes:
+        bx = b["box"]
+        if bx["maxclass"] != "panel" or bx.get("background") != 1:
+            continue
+        x, y, w, h = bx["presentation_rect"]
+        if first is None:
+            first = bx["id"]          # the full-device background: becomes the faceplate base colour
+        else:
+            spec["paint"].append((x, y, w, h, [round(c * 255) for c in bx["bgcolor"][:3]], bx.get("rounded", 0)))
+            if bx.get("border"):
+                spec["frames_flat"].append((x, y, w, h, [round(c * 255) for c in bx["bordercolor"][:3]],
+                                            bx.get("rounded", 0)))
+        bx["bgcolor"] = hwpanel.CLEAR
+        if bx.get("border"):
+            bx["bordercolor"] = hwpanel.CLEAR
+    pos = next(i for i, b in enumerate(boxes) if b["box"]["id"] == first) + 1
+    fb = comment("Panel images not found: keep the ep3_*.png files next to the .amxd, or Freeze the device in Max.",
+                 [300, 80, 700, 16], [20, 2000, 600, 18], size=9.0, textcolor=C["text"], background=1)
+    boxes.insert(pos, boxes.pop())
+    face = hwpanel.fpic_box(nid(), FACE[pal], [0, 0, int(DEVW), 169], (20, 2030), background=True)
+    face["varname"] = "ep3_faceplate"
+    boxes.insert(pos + 1, {"box": face})
+    ky = 2100
+    adv_imgs = []
+    for b in list(boxes):
+        bx = b["box"]
+        if bx["maxclass"] != "live.dial":
+            continue
+        x, y, w, h = bx["presentation_rect"]
+        va = bx["saved_attribute_attributes"]["valueof"]
+        kb = int(max(22, min(w - 4, h - 24))) // 2 * 2
+        kind = f"k{kb}"
+        spec["knob_boxes"][kind] = kb
+        key = bx["varname"]
+        spec["knobs"][key] = {"cx": x + w / 2, "cy": y + h / 2 + 2, "kind": kind, "scale": "none"}
+        for c in ("activedialcolor", "dialcolor", "needlecolor", "activeneedlecolor"):
+            bx[c] = hwpanel.CLEAR
+        pic = hwpanel.fpic_box(nid(), hwpanel.image_name(spec, "knob", key), hwpanel.rect(spec, "knob", key),
+                               (20, ky))
+        if key in ADV:                       # ADVANCED view: the knob image shows / hides with its dial
+            pic["varname"] = key + "_img"
+            if bx.get("hidden"):
+                pic["hidden"] = 1
+            adv_imgs.append(pic["varname"])
+        boxes.insert(boxes.index(b), {"box": pic})
+        fr = obj("expr " + hwpanel.knob_frame_expr(kb, va["parameter_mmin"], va["parameter_mmax"],
+                                                    va.get("parameter_exponent", 1.0)), [400, ky, 300, 22])
+        of = obj("prepend offset 0", [720, ky, 110, 22])
+        line(bx["id"], 0, fr, 0); line(fr, 0, of, 0); line(of, 0, pic["id"], 0)
+        ky += 26
+    by = {b["box"]["id"]: b["box"] for b in boxes}
+    if adv_imgs:
+        by[adv_hide]["text"] += ", " + ", ".join(f"script hide {n}" for n in adv_imgs)
+        by[adv_show]["text"] += ", " + ", ".join(f"script show {n}" for n in adv_imgs)
+    SPECS[pal] = spec
 
 
 # ---- UI theme switch -----------------------------------------------------------
@@ -140,6 +218,11 @@ for a, b, fin in zip(_A, _B, boxes):
     a, b, fb = a["box"], b["box"], fin["box"]
     assert a["id"] == b["id"] and a["maxclass"] == b["maxclass"] and set(a) == set(b)
     diff = [k for k in a if a[k] != b[k] and k != "saved_attribute_attributes"]
+    if a["maxclass"] == "fpic" and diff == ["pic"]:          # the faceplate image follows the theme
+        for name, src in (("ember", a), ("el", b)):
+            theme_msgs[name].append("script sendbox %s pic %s" % (fb["varname"], src["pic"]))
+        themed_boxes += 1
+        continue
     va = a.get("saved_attribute_attributes", {}).get("valueof", {})
     vb = b.get("saved_attribute_attributes", {}).get("valueof", {})
     assert {k: v for k, v in va.items() if k != "parameter_initial"} == \
@@ -198,7 +281,11 @@ patcher = {
         "gridonopen": 1, "gridsize": [8.0, 8.0], "devicewidth": DEVW,
         "description": "Echolivity EP-3 — tape echo after the Maestro Echoplex EP-3, v0.1.3-dev" + (" (Return: Echo Volume 1, fully wet)" if VARIANT == "return" else ""),
         "parameters": registry,
-        "boxes": boxes, "lines": lines, "dependency_cache": [],
+        "boxes": boxes, "lines": lines,
+        "dependency_cache": [] if os.environ.get("EP3_HW", "1") != "1" else [{"name": n, "type": "PNG", "implicit": 1}
+                             for p_ in sorted({b["box"]["pic"] for b in boxes if b["box"]["maxclass"] == "fpic"}
+                                              | set(FACE.values()))
+                             for n in (p_, p_.replace(".png", "@2x.png"))],
         "latency": 0, "is_mpe": 0, "minimum_live_version": "", "minimum_max_version": "",
         "platform_compatibility": 0,
         "project": {"version": 1, "creationdate": 3590052493, "modificationdate": 3590052493,
